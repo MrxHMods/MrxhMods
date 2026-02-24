@@ -1,0 +1,2212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Admin Panel</title>
+    
+    <!-- Google Symbols (Material Icons) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
+    
+    <!-- Google Fonts - Inter for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0a0c14;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Enhanced Neon Background Effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.12) 0%, transparent 35%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(255, 0, 255, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 90% 20%, rgba(255, 255, 0, 0.08) 0%, transparent 35%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            position: relative;
+        }
+
+        /* Enhanced Grid Lines */
+        .container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Premium Header */
+        .admin-header {
+            background: rgba(10, 12, 20, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(0, 255, 136, 0.1) inset,
+                0 0 30px rgba(0, 255, 136, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, #00ffff, transparent);
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title h1 {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #a0f0c0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            color: #8892b0;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .admin-badge-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 255, 136, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 100px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            transition: all 0.3s;
+        }
+
+        .admin-badge:hover {
+            transform: translateY(-2px);
+            border-color: #00ff88;
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.2);
+        }
+
+        .badge-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 255, 136, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .badge-icon .material-symbols-outlined {
+            color: #00ff88;
+            font-size: 22px;
+        }
+
+        .badge-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .badge-label {
+            color: #8892b0;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-value {
+            color: #00ff88;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.2;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        .badge-value small {
+            font-size: 14px;
+            font-weight: 400;
+            color: #8892b0;
+            margin-left: 4px;
+        }
+
+        /* Enhanced Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(10, 12, 20, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 255, 136, 0.2), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: rgba(0, 255, 136, 0.4);
+            box-shadow: 
+                0 25px 45px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(0, 255, 136, 0.2) inset,
+                0 0 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .stat-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 255, 136, 0.05) 100%);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon .material-symbols-outlined {
+            font-size: 32px;
+            color: #00ff88;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-label {
+            color: #8892b0;
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            background: linear-gradient(135deg, #fff 0%, #b0ffd0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .stat-sub {
+            color: #00ff88;
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        /* Enhanced Chart */
+        .chart-container {
+            background: rgba(10, 12, 20, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .chart-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-title .material-symbols-outlined {
+            color: #00ff88;
+            font-size: 24px;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            height: 260px;
+            margin-top: 20px;
+        }
+
+        .chart-bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+
+        .chart-bar-wrapper:hover {
+            transform: translateY(-5px);
+        }
+
+        .chart-bar {
+            width: 100%;
+            background: linear-gradient(180deg, #00ff88 0%, #00cc88 100%);
+            border-radius: 12px 12px 0 0;
+            min-height: 4px;
+            transition: height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .chart-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            border-radius: inherit;
+        }
+
+        .chart-bar:hover {
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.7);
+        }
+
+        .chart-value {
+            color: #00ff88;
+            font-size: 14px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .chart-label {
+            color: #8892b0;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+
+        .chart-bar-wrapper:hover .chart-label {
+            color: #fff;
+        }
+
+        /* Enhanced Top List */
+        .top-list {
+            background: rgba(10, 12, 20, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .top-title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            transition: all 0.3s;
+            border-radius: 16px;
+        }
+
+        .top-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+            transform: translateX(8px);
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .top-rank {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ff88;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .top-item:hover .top-rank {
+            transform: scale(1.1);
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .top-rank.gold {
+            background: rgba(255, 215, 0, 0.15);
+            border-color: gold;
+            color: gold;
+        }
+
+        .top-rank.silver {
+            background: rgba(192, 192, 192, 0.15);
+            border-color: silver;
+            color: silver;
+        }
+
+        .top-rank.bronze {
+            background: rgba(205, 127, 50, 0.15);
+            border-color: #cd7f32;
+            color: #cd7f32;
+        }
+
+        .top-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            transition: all 0.3s;
+        }
+
+        .top-item:hover .top-icon {
+            border-color: #00ff88;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .top-info {
+            flex: 1;
+        }
+
+        .top-name {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+
+        .top-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #8892b0;
+        }
+
+        .top-downloads {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #00ff88;
+            font-weight: 700;
+            font-size: 16px;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 8px 16px;
+            border-radius: 100px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        /* Enhanced Tabs */
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(10, 12, 20, 0.7);
+            backdrop-filter: blur(10px);
+            color: #8892b0;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            flex: 1;
+            min-width: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .tab-btn .material-symbols-outlined {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+
+        .tab-btn:hover:not(.active) {
+            border-color: rgba(0, 255, 136, 0.4);
+            color: #fff;
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .tab-btn:hover .material-symbols-outlined {
+            transform: scale(1.1);
+        }
+
+        .tab-btn.active {
+            background: transparent;
+            color: #00ff88;
+            border-color: #00ff88;
+            box-shadow: 
+                0 10px 30px rgba(0, 255, 136, 0.25),
+                0 0 0 1px rgba(0, 255, 136, 0.3) inset;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        /* Enhanced Panels */
+        .panel {
+            display: none;
+            background: rgba(10, 12, 20, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 32px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(0, 255, 136, 0.1) inset;
+            margin-bottom: 32px;
+        }
+
+        .panel.active {
+            display: block;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.98);
+                filter: blur(5px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        .panel h2 {
+            color: #fff;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .panel h2 .material-symbols-outlined {
+            color: #00ff88;
+            font-size: 32px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+        }
+
+        .panel h2 span {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            margin-left: auto;
+        }
+
+        /* Enhanced Forms */
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #00ff88;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label .material-symbols-outlined {
+            font-size: 18px;
+            color: #00ff88;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(0, 255, 136, 0.15);
+            border-radius: 16px;
+            font-size: 15px;
+            transition: all 0.3s;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .form-group input:hover,
+        .form-group textarea:hover,
+        .form-group select:hover {
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #00ff88;
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 
+                0 0 0 4px rgba(0, 255, 136, 0.1),
+                0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 400;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .version-input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .version-input-group input {
+            flex: 1;
+        }
+
+        .version-input-group .btn {
+            width: auto;
+            padding: 0 24px;
+            margin: 0;
+        }
+
+        /* Enhanced Buttons */
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            color: #00ff88;
+            margin-right: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid #00ff88;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            min-width: 160px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0, 255, 136, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 30px rgba(0, 255, 136, 0.3),
+                0 0 0 2px rgba(0, 255, 136, 0.3) inset;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            color: #8892b0;
+            border-color: #8892b0;
+        }
+
+        .btn-secondary:hover::before {
+            background: rgba(136, 146, 176, 0.2);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 15px 30px rgba(136, 146, 176, 0.2);
+        }
+
+        .btn-danger {
+            color: #ff4757;
+            border-color: #ff4757;
+        }
+
+        .btn-danger:hover::before {
+            background: rgba(255, 71, 87, 0.2);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 15px 30px rgba(255, 71, 87, 0.3);
+        }
+
+        .btn-small {
+            padding: 12px 20px;
+            font-size: 13px;
+            min-width: auto;
+            margin: 0 6px;
+        }
+
+        /* Enhanced Items List */
+        .items-list {
+            margin-top: 48px;
+        }
+
+        .items-list h3 {
+            color: #fff;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .items-list h3 span {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 14px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            margin-left: auto;
+        }
+
+        .item-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .item-card:hover {
+            border-color: rgba(0, 255, 136, 0.4);
+            transform: translateX(8px) scale(1.01);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(0, 255, 136, 0.2) inset;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .item-preview {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            object-fit: cover;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            transition: all 0.3s;
+        }
+
+        .item-card:hover .item-preview {
+            border-color: #00ff88;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-version-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            font-weight: 600;
+        }
+
+        .item-subtitle {
+            font-size: 13px;
+            color: #8892b0;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .item-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 13px;
+            color: #00ff88;
+            flex-wrap: wrap;
+        }
+
+        .item-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .item-meta .material-symbols-outlined {
+            font-size: 16px;
+            color: #8892b0;
+        }
+
+        .download-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 6px 14px;
+            border-radius: 100px;
+            color: gold;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Enhanced Profile Preview */
+        .profile-preview {
+            text-align: center;
+            margin-bottom: 36px;
+            padding: 36px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 32px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            box-shadow: inset 0 0 50px rgba(0, 255, 136, 0.05);
+        }
+
+        .profile-preview-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 32px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 3px solid #00ff88;
+            box-shadow: 
+                0 15px 35px rgba(0, 255, 136, 0.3),
+                0 0 0 2px rgba(0, 255, 136, 0.2) inset;
+            transition: all 0.3s;
+        }
+
+        .profile-preview-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.4);
+        }
+
+        .profile-preview-name {
+            background: linear-gradient(135deg, #fff 0%, #a0ffc0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .profile-preview-bio {
+            color: #8892b0;
+            font-size: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Enhanced Alert */
+        .alert {
+            padding: 18px 28px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+            display: none;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            border: 1px solid;
+            position: relative;
+            animation: slideDown 0.4s;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.success {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            border-color: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .alert.error {
+            background: rgba(255, 71, 87, 0.1);
+            color: #ff4757;
+            border-color: rgba(255, 71, 87, 0.3);
+            box-shadow: 0 0 30px rgba(255, 71, 87, 0.2);
+        }
+
+        /* Enhanced Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #8892b0;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 255, 136, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #00ff88;
+            border-right: 4px solid #00ff88;
+            width: 60px;
+            height: 60px;
+            animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Enhanced Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 32px;
+            border: 2px dashed rgba(0, 255, 136, 0.2);
+        }
+
+        .empty-state .material-symbols-outlined {
+            font-size: 64px;
+            color: #00ff88;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.3));
+        }
+
+        .empty-state p {
+            color: #8892b0;
+            font-size: 18px;
+            margin-bottom: 24px;
+        }
+
+        /* Enhanced Mobile */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .admin-header {
+                padding: 24px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .header-title h1 {
+                font-size: 28px;
+                text-align: center;
+            }
+
+            .header-title p {
+                text-align: center;
+            }
+
+            .admin-badge-container {
+                justify-content: center;
+            }
+
+            .admin-badge {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .chart-bars {
+                flex-direction: column;
+                height: auto;
+                gap: 16px;
+            }
+
+            .chart-bar-wrapper {
+                flex-direction: row;
+                gap: 16px;
+            }
+
+            .chart-bar {
+                height: 40px !important;
+                width: var(--bar-width, 100%);
+                border-radius: 0 12px 12px 0;
+            }
+
+            .chart-value {
+                min-width: 50px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                width: 100%;
+            }
+
+            .item-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+
+            .item-actions {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                width: 100%;
+                margin: 4px 0;
+            }
+
+            .form-actions {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .item-title {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .item-meta {
+                justify-content: center;
+            }
+
+            .top-item {
+                flex-wrap: wrap;
+            }
+
+            .top-downloads {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            .panel h2 {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+
+            .panel h2 span {
+                margin-left: 0;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 136, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 136, 0.5);
+        }
+
+        /* Selection Styling */
+        ::selection {
+            background: rgba(0, 255, 136, 0.3);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Admin Header -->
+        <div class="admin-header">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>⚡ APK Download Analytics</h1>
+                    <p>Monitor dan kelola statistik download APK dengan update real-time</p>
+                </div>
+                <div class="admin-badge-container">
+                    <div class="admin-badge">
+                        <div class="badge-icon">
+                            <span class="material-symbols-outlined">download</span>
+                        </div>
+                        <div class="badge-info">
+                            <span class="badge-label">Total Download</span>
+                            <span class="badge-value" id="headerTotalDownloads">0</span>
+                        </div>
+                    </div>
+                    <div class="admin-badge">
+                        <div class="badge-icon">
+                            <span class="material-symbols-outlined">apps</span>
+                        </div>
+                        <div class="badge-info">
+                            <span class="badge-label">Total APK</span>
+                            <span class="badge-value" id="headerTotalApk">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert -->
+        <div id="alert" class="alert"></div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid" id="statsContainer">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">apps</span>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Total APK</div>
+                    <div class="stat-value" id="totalApk">0</div>
+                    <div class="stat-sub">aplikasi terdaftar</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">download</span>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Total Download</div>
+                    <div class="stat-value" id="totalDownloads">0</div>
+                    <div class="stat-sub">sepanjang waktu</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">trending_up</span>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Rata-rata</div>
+                    <div class="stat-value" id="avgDownloads">0</div>
+                    <div class="stat-sub">download per APK</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">military_tech</span>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-label">Terpopuler</div>
+                    <div class="stat-value" id="topApk">-</div>
+                    <div class="stat-sub" id="topDownloads">0 download</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="chart-title">
+                    <span class="material-symbols-outlined">bar_chart</span>
+                    Top 5 APK by Downloads
+                </div>
+                <div class="chart-title">
+                    <span class="material-symbols-outlined">update</span>
+                    Update Real-time
+                </div>
+            </div>
+            <div class="chart-bars" id="chartBars">
+                <!-- Bars will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Top Downloads List -->
+        <div class="top-list">
+            <div class="top-header">
+                <div class="top-title">
+                    <span class="material-symbols-outlined">leaderboard</span>
+                    Peringkat Download
+                </div>
+                <div class="top-title">
+                    <span class="material-symbols-outlined">timeline</span>
+                    Statistik Download
+                </div>
+            </div>
+            <div id="topList">
+                <!-- Top list will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('profile')">
+                <span class="material-symbols-outlined">account_circle</span>
+                Profile
+            </button>
+            <button class="tab-btn" onclick="showTab('links')">
+                <span class="material-symbols-outlined">apk_install</span>
+                Kelola APK
+            </button>
+            <button class="tab-btn" onclick="showTab('info')">
+                <span class="material-symbols-outlined">newspaper</span>
+                Kelola Berita
+            </button>
+        </div>
+
+        <!-- Profile Panel -->
+        <div id="profilePanel" class="panel active">
+            <h2>
+                <span class="material-symbols-outlined">edit_square</span>
+                Edit Profile
+                <span>ADMIN</span>
+            </h2>
+            
+            <div class="profile-preview">
+                <img src="https://via.placeholder.com/140" alt="Profile Preview" class="profile-preview-img" id="profilePreview">
+                <div class="profile-preview-name" id="previewName">Nama Profile</div>
+                <div class="profile-preview-bio" id="previewBio">Bio akan tampil di sini</div>
+            </div>
+
+            <form id="profileForm">
+                <div class="form-group">
+                    <label>
+                        <span class="material-symbols-outlined">badge</span>
+                        Nama Profile
+                    </label>
+                    <input type="text" id="profileName" placeholder="Contoh: APK Download Hub" onkeyup="updatePreview()">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="material-symbols-outlined">description</span>
+                        Bio / Deskripsi
+                    </label>
+                    <textarea id="profileBio" placeholder="Tulis bio singkat tentang website APK Anda..." onkeyup="updatePreview()" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="material-symbols-outlined">image</span>
+                        URL Gambar Profile
+                    </label>
+                    <input type="url" id="profileImage" placeholder="https://example.com/image.jpg" onchange="updatePreview()">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="saveProfile()">
+                        <span class="material-symbols-outlined">save</span>
+                        SIMPAN PROFILE
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Links Panel (APK Manager) -->
+        <div id="linksPanel" class="panel">
+            <h2>
+                <span class="material-symbols-outlined">add_box</span>
+                Tambah APK Baru
+                <span>TRACKER</span>
+            </h2>
+            
+            <form id="linkForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <span class="material-symbols-outlined">app_registration</span>
+                            Nama APK
+                        </label>
+                        <input type="text" id="linkTitle" placeholder="Contoh: Instagram MOD" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="material-symbols-outlined">link</span>
+                            URL Download
+                        </label>
+                        <input type="url" id="linkUrl" placeholder="https://..." required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="material-symbols-outlined">description</span>
+                        Deskripsi APK
+                    </label>
+                    <textarea id="linkDescription" placeholder="Jelaskan fitur dan kelebihan APK ini..." rows="3"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <span class="material-symbols-outlined">info</span>
+                            Info Detail
+                        </label>
+                        <input type="text" id="linkDetail" placeholder="Contoh: Versi Mod, Fitur Premium">
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="material-symbols-outlined">image</span>
+                            URL Icon
+                        </label>
+                        <input type="url" id="linkIcon" placeholder="https://example.com/icon.jpg">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <span class="material-symbols-outlined">tag</span>
+                            Versi APK
+                        </label>
+                        <div class="version-input-group">
+                            <input type="text" id="linkVersion" placeholder="Contoh: v2.5.1" value="v1.0.0">
+                            <button type="button" class="btn btn-small" onclick="incrementVersion()">
+                                <span class="material-symbols-outlined">add</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="material-symbols-outlined">sort_by_alpha</span>
+                            Urutan
+                        </label>
+                        <input type="number" id="linkOrder" value="0" min="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <span class="material-symbols-outlined">storage</span>
+                            Ukuran File
+                        </label>
+                        <input type="text" id="linkSize" placeholder="Contoh: 25.5 MB">
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="material-symbols-outlined">download</span>
+                            Download Awal
+                        </label>
+                        <input type="number" id="linkDownloads" value="0" min="0" placeholder="Jumlah download awal">
+                    </div>
+                </div>
+
+                <input type="hidden" id="linkId" value="">
+                
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="saveLink()">
+                        <span class="material-symbols-outlined">download</span>
+                        SIMPAN APK
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="resetLinkForm()">
+                        <span class="material-symbols-outlined">refresh</span>
+                        RESET
+                    </button>
+                </div>
+            </form>
+
+            <div class="items-list">
+                <h3>
+                    <span class="material-symbols-outlined">list</span>
+                    DAFTAR APK
+                    <span id="totalLinks">0</span>
+                </h3>
+                <div id="linksList">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Memuat daftar APK...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Posts Panel (News Manager) -->
+        <div id="infoPanel" class="panel">
+            <h2>
+                <span class="material-symbols-outlined">post_add</span>
+                Tambah Berita
+                <span>UPDATE</span>
+            </h2>
+            
+            <form id="infoForm">
+                <div class="form-group">
+                    <label>
+                        <span class="material-symbols-outlined">title</span>
+                        Judul Berita
+                    </label>
+                    <input type="text" id="infoTitle" placeholder="Contoh: Update Instagram MOD v10.5" required>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="material-symbols-outlined">article</span>
+                        Isi Berita
+                    </label>
+                    <textarea id="infoDetail" placeholder="Tulis berita lengkap di sini..." required rows="4"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <span class="material-symbols-outlined">image</span>
+                            URL Gambar
+                        </label>
+                        <input type="url" id="infoImage" placeholder="https://example.com/image.jpg">
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="material-symbols-outlined">link</span>
+                            Link Terkait
+                        </label>
+                        <input type="url" id="infoLink" placeholder="https://...">
+                    </div>
+                </div>
+
+                <input type="hidden" id="infoId" value="">
+                
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="saveInfoPost()">
+                        <span class="material-symbols-outlined">publish</span>
+                        PUBLISH BERITA
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="resetInfoForm()">
+                        <span class="material-symbols-outlined">refresh</span>
+                        RESET
+                    </button>
+                </div>
+            </form>
+
+            <div class="items-list">
+                <h3>
+                    <span class="material-symbols-outlined">newspaper</span>
+                    DAFTAR BERITA
+                    <span id="totalInfo">0</span>
+                </h3>
+                <div id="infoList">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Memuat daftar berita...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc, query, orderBy, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfXJNWEFCZPXOuXF98IBmfkBKERADL0kg",
+            authDomain: "linktree-8a6ad.firebaseapp.com",
+            projectId: "linktree-8a6ad",
+            storageBucket: "linktree-8a6ad.firebasestorage.app",
+            messagingSenderId: "1037584366190",
+            appId: "1:1037584366190:web:93f409e51e791cc6eb847f",
+            measurementId: "G-F8F65QB3HT"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        // Variables untuk unsubscribe dari listener
+        let unsubscribeLinks = null;
+        let unsubscribeInfo = null;
+        let unsubscribeProfile = null;
+
+        // Show alert
+        function showAlert(message, type = 'success') {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = 'alert ' + type;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        // Format angka dengan K/M
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        // Update statistics
+        function updateStatistics(links) {
+            const totalApk = links.length;
+            let totalDownloads = 0;
+            let maxDownloads = 0;
+            let topApkName = '-';
+            
+            links.forEach(link => {
+                const downloads = link.downloads || 0;
+                totalDownloads += downloads;
+                
+                if (downloads > maxDownloads) {
+                    maxDownloads = downloads;
+                    topApkName = link.title || 'Unknown';
+                }
+            });
+            
+            const avgDownloads = totalApk > 0 ? Math.round(totalDownloads / totalApk) : 0;
+            
+            document.getElementById('totalApk').textContent = totalApk;
+            document.getElementById('totalDownloads').textContent = formatNumber(totalDownloads);
+            document.getElementById('avgDownloads').textContent = formatNumber(avgDownloads);
+            document.getElementById('topApk').textContent = topApkName.length > 15 ? topApkName.substring(0, 15) + '...' : topApkName;
+            document.getElementById('topDownloads').textContent = formatNumber(maxDownloads) + ' download';
+            
+            // Update header badges
+            document.getElementById('headerTotalDownloads').textContent = formatNumber(totalDownloads);
+            document.getElementById('headerTotalApk').textContent = totalApk;
+            
+            // Update chart
+            updateChart(links);
+            
+            // Update top list
+            updateTopList(links);
+        }
+
+        // Update chart
+        function updateChart(links) {
+            const chartBars = document.getElementById('chartBars');
+            
+            // Sort by downloads descending and take top 5
+            const top5 = [...links]
+                .sort((a, b) => (b.downloads || 0) - (a.downloads || 0))
+                .slice(0, 5);
+            
+            if (top5.length === 0) {
+                chartBars.innerHTML = '<div style="color: #8892b0; text-align: center; width: 100%; padding: 40px;">Belum ada data download</div>';
+                return;
+            }
+            
+            const maxDownload = Math.max(...top5.map(l => l.downloads || 0));
+            
+            let html = '';
+            top5.forEach(link => {
+                const downloads = link.downloads || 0;
+                const percentage = maxDownload > 0 ? (downloads / maxDownload) * 100 : 0;
+                const barHeight = Math.max(40, percentage); // Minimum height 40px
+                
+                html += `
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" style="height: ${barHeight}px;"></div>
+                        <div class="chart-value">${formatNumber(downloads)}</div>
+                        <div class="chart-label" title="${link.title}">${link.title || 'Unknown'}</div>
+                    </div>
+                `;
+            });
+            
+            chartBars.innerHTML = html;
+        }
+
+        // Update top list
+        function updateTopList(links) {
+            const topList = document.getElementById('topList');
+            
+            // Sort by downloads descending
+            const sorted = [...links]
+                .sort((a, b) => (b.downloads || 0) - (a.downloads || 0))
+                .slice(0, 10);
+            
+            if (sorted.length === 0) {
+                topList.innerHTML = '<div style="color: #8892b0; text-align: center; padding: 40px;">Belum ada data download</div>';
+                return;
+            }
+            
+            let html = '';
+            sorted.forEach((link, index) => {
+                const downloads = link.downloads || 0;
+                let rankClass = '';
+                if (index === 0) rankClass = 'gold';
+                else if (index === 1) rankClass = 'silver';
+                else if (index === 2) rankClass = 'bronze';
+                
+                html += `
+                    <div class="top-item">
+                        <div class="top-rank ${rankClass}">${index + 1}</div>
+                        <img src="${link.icon || 'https://via.placeholder.com/48'}" alt="${link.title}" class="top-icon" onerror="this.src='https://via.placeholder.com/48'">
+                        <div class="top-info">
+                            <div class="top-name">${link.title || 'Unknown'}</div>
+                            <div class="top-meta">
+                                <span>${link.version || 'v1.0.0'}</span>
+                                <span>${link.size || '~ MB'}</span>
+                            </div>
+                        </div>
+                        <div class="top-downloads">
+                            <span class="material-symbols-outlined">download</span>
+                            ${formatNumber(downloads)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            topList.innerHTML = html;
+        }
+
+        // Tab switching
+        window.showTab = function(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById(tabName + 'Panel').classList.add('active');
+        };
+
+        // Update preview
+        window.updatePreview = function() {
+            document.getElementById('previewName').textContent = document.getElementById('profileName').value || 'Nama Profile';
+            document.getElementById('previewBio').textContent = document.getElementById('profileBio').value || 'Bio akan tampil di sini';
+            document.getElementById('profilePreview').src = document.getElementById('profileImage').value || 'https://via.placeholder.com/140';
+        };
+
+        // Version Management Functions
+        function parseVersion(version) {
+            const match = version.match(/v?(\d+)\.(\d+)\.(\d+)/);
+            if (match) {
+                return {
+                    major: parseInt(match[1]),
+                    minor: parseInt(match[2]),
+                    patch: parseInt(match[3])
+                };
+            }
+            return null;
+        }
+
+        window.incrementVersion = function() {
+            const versionInput = document.getElementById('linkVersion');
+            let currentVersion = versionInput.value || 'v1.0.0';
+            
+            const parsed = parseVersion(currentVersion);
+            if (parsed) {
+                // Increment patch version
+                const newVersion = `v${parsed.major}.${parsed.minor}.${parsed.patch + 1}`;
+                versionInput.value = newVersion;
+            } else {
+                versionInput.value = 'v1.0.0';
+            }
+        };
+
+        // Profile functions dengan Realtime
+        function listenToProfile() {
+            if (unsubscribeProfile) {
+                unsubscribeProfile();
+            }
+
+            const profileRef = doc(db, 'settings', 'profile');
+            unsubscribeProfile = onSnapshot(profileRef, (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    document.getElementById('profileName').value = data.name || '';
+                    document.getElementById('profileBio').value = data.bio || '';
+                    document.getElementById('profileImage').value = data.profileImage || '';
+                    document.getElementById('profilePreview').src = data.profileImage || 'https://via.placeholder.com/140';
+                    updatePreview();
+                    
+                    if (document.getElementById('profilePanel').classList.contains('active')) {
+                        showAlert('🔄 Profile telah diupdate dari perangkat lain!', 'success');
+                    }
+                }
+            }, (error) => {
+                console.error('Error listening to profile:', error);
+            });
+        }
+
+        window.saveProfile = async function() {
+            const profileData = {
+                name: document.getElementById('profileName').value,
+                bio: document.getElementById('profileBio').value,
+                profileImage: document.getElementById('profileImage').value,
+                updatedAt: new Date()
+            };
+
+            try {
+                const profileRef = doc(db, 'settings', 'profile');
+                await setDoc(profileRef, profileData);
+                showAlert('✅ Profile berhasil disimpan!');
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showAlert('❌ Gagal menyimpan profile!', 'error');
+            }
+        };
+
+        // Links functions dengan Realtime dan Download Count
+        function listenToLinks() {
+            if (unsubscribeLinks) {
+                unsubscribeLinks();
+            }
+
+            const linksRef = collection(db, 'links');
+            const q = query(linksRef, orderBy('order', 'asc'));
+            
+            unsubscribeLinks = onSnapshot(q, (querySnapshot) => {
+                const linksList = document.getElementById('linksList');
+                const links = [];
+                
+                querySnapshot.forEach(doc => {
+                    links.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Update statistics
+                updateStatistics(links);
+                
+                document.getElementById('totalLinks').textContent = links.length;
+
+                if (links.length === 0) {
+                    linksList.innerHTML = `
+                        <div class="empty-state">
+                            <span class="material-symbols-outlined">apk_install</span>
+                            <p>Belum ada APK yang ditambahkan</p>
+                            <button class="btn btn-small" onclick="document.querySelector('.tab-btn:nth-child(2)').click()">Tambah APK Sekarang</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                links.forEach(link => {
+                    const currentVersion = link.version || 'v1.0.0';
+                    const downloads = link.downloads || 0;
+                    
+                    html += `
+                        <div class="item-card">
+                            <img src="${link.icon || 'https://via.placeholder.com/70'}" alt="${link.title}" class="item-preview" onerror="this.src='https://via.placeholder.com/70'">
+                            <div class="item-info">
+                                <div class="item-title">
+                                    ${link.title}
+                                    <span class="item-version-tag">
+                                        <span class="material-symbols-outlined">tag</span>
+                                        ${currentVersion}
+                                    </span>
+                                </div>
+                                <div class="item-subtitle">${link.url}</div>
+                                <div class="item-meta">
+                                    <span><span class="material-symbols-outlined">storage</span> ${link.size || '~ MB'}</span>
+                                    <span><span class="material-symbols-outlined">sort</span> Order: ${link.order || 0}</span>
+                                    <span class="download-count-badge">
+                                        <span class="material-symbols-outlined">download</span>
+                                        ${formatNumber(downloads)}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn btn-small" onclick="editLink('${link.id}')">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button class="btn btn-small" onclick="resetDownloads('${link.id}')">
+                                    <span class="material-symbols-outlined">restart_alt</span>
+                                </button>
+                                <button class="btn btn-small btn-danger" onclick="deleteLink('${link.id}')">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                linksList.innerHTML = html;
+                
+                if (document.getElementById('linksPanel').classList.contains('active')) {
+                    showAlert('🔄 Daftar APK telah diperbarui!', 'success');
+                }
+            }, (error) => {
+                console.error('Error listening to links:', error);
+                document.getElementById('linksList').innerHTML = '<div style="text-align: center; padding: 40px; color: #ff4757;">Gagal memuat data</div>';
+            });
+        }
+
+        window.saveLink = async function() {
+            const linkId = document.getElementById('linkId').value;
+            const newVersion = document.getElementById('linkVersion').value || 'v1.0.0';
+
+            const linkData = {
+                title: document.getElementById('linkTitle').value,
+                url: document.getElementById('linkUrl').value,
+                description: document.getElementById('linkDescription').value,
+                detail: document.getElementById('linkDetail').value,
+                icon: document.getElementById('linkIcon').value || 'https://via.placeholder.com/70',
+                size: document.getElementById('linkSize').value || '~ MB',
+                order: parseInt(document.getElementById('linkOrder').value) || 0,
+                version: newVersion,
+                updatedAt: new Date()
+            };
+
+            // Handle downloads count
+            const downloadsInput = parseInt(document.getElementById('linkDownloads').value) || 0;
+            if (!linkId) {
+                // New APK, set initial downloads
+                linkData.downloads = downloadsInput;
+            } else {
+                // Existing APK, preserve current downloads or set new initial value
+                try {
+                    const linkRef = doc(db, 'links', linkId);
+                    const linkDoc = await getDoc(linkRef);
+                    if (linkDoc.exists()) {
+                        linkData.downloads = linkDoc.data().downloads || 0;
+                    } else {
+                        linkData.downloads = downloadsInput;
+                    }
+                } catch (error) {
+                    linkData.downloads = downloadsInput;
+                }
+            }
+
+            if (!linkData.title || !linkData.url) {
+                showAlert('❌ Nama APK dan URL harus diisi!', 'error');
+                return;
+            }
+
+            try {
+                if (linkId) {
+                    const linkRef = doc(db, 'links', linkId);
+                    await updateDoc(linkRef, linkData);
+                    showAlert('✅ APK berhasil diupdate!');
+                } else {
+                    linkData.createdAt = new Date();
+                    const linksRef = collection(db, 'links');
+                    await addDoc(linksRef, linkData);
+                    showAlert('✅ APK berhasil ditambahkan!');
+                }
+                
+                resetLinkForm();
+            } catch (error) {
+                console.error('Error saving link:', error);
+                showAlert('❌ Gagal menyimpan APK!', 'error');
+            }
+        };
+
+        window.editLink = async function(id) {
+            try {
+                const linkRef = doc(db, 'links', id);
+                const linkDoc = await getDoc(linkRef);
+                
+                if (linkDoc.exists()) {
+                    const link = linkDoc.data();
+                    document.getElementById('linkId').value = id;
+                    document.getElementById('linkTitle').value = link.title || '';
+                    document.getElementById('linkUrl').value = link.url || '';
+                    document.getElementById('linkDescription').value = link.description || '';
+                    document.getElementById('linkDetail').value = link.detail || '';
+                    document.getElementById('linkIcon').value = link.icon || '';
+                    document.getElementById('linkSize').value = link.size || '';
+                    document.getElementById('linkOrder').value = link.order || 0;
+                    document.getElementById('linkVersion').value = link.version || 'v1.0.0';
+                    document.getElementById('linkDownloads').value = link.downloads || 0;
+                    
+                    document.querySelectorAll('.tab-btn')[1].click();
+                }
+            } catch (error) {
+                console.error('Error editing link:', error);
+            }
+        };
+
+        window.resetDownloads = async function(id) {
+            if (confirm('Reset jumlah download ke 0?')) {
+                try {
+                    const linkRef = doc(db, 'links', id);
+                    await updateDoc(linkRef, {
+                        downloads: 0,
+                        updatedAt: new Date()
+                    });
+                    showAlert('✅ Jumlah download direset!');
+                } catch (error) {
+                    console.error('Error resetting downloads:', error);
+                    showAlert('❌ Gagal mereset download!', 'error');
+                }
+            }
+        };
+
+        window.deleteLink = async function(id) {
+            if (confirm('Yakin ingin menghapus APK ini?')) {
+                try {
+                    const linkRef = doc(db, 'links', id);
+                    await deleteDoc(linkRef);
+                    showAlert('✅ APK berhasil dihapus!');
+                } catch (error) {
+                    console.error('Error deleting link:', error);
+                    showAlert('❌ Gagal menghapus APK!', 'error');
+                }
+            }
+        };
+
+        window.resetLinkForm = function() {
+            document.getElementById('linkId').value = '';
+            document.getElementById('linkTitle').value = '';
+            document.getElementById('linkUrl').value = '';
+            document.getElementById('linkDescription').value = '';
+            document.getElementById('linkDetail').value = '';
+            document.getElementById('linkIcon').value = '';
+            document.getElementById('linkSize').value = '';
+            document.getElementById('linkOrder').value = '0';
+            document.getElementById('linkVersion').value = 'v1.0.0';
+            document.getElementById('linkDownloads').value = '0';
+        };
+
+        // Info Posts functions dengan Realtime
+        function listenToInfoPosts() {
+            if (unsubscribeInfo) {
+                unsubscribeInfo();
+            }
+
+            const infoRef = collection(db, 'infoPosts');
+            const q = query(infoRef, orderBy('createdAt', 'desc'));
+            
+            unsubscribeInfo = onSnapshot(q, (querySnapshot) => {
+                const infoList = document.getElementById('infoList');
+                
+                document.getElementById('totalInfo').textContent = querySnapshot.size;
+
+                if (querySnapshot.empty) {
+                    infoList.innerHTML = `
+                        <div class="empty-state">
+                            <span class="material-symbols-outlined">newspaper</span>
+                            <p>Belum ada berita</p>
+                            <button class="btn btn-small" onclick="document.querySelector('.tab-btn:nth-child(3)').click()">Tulis Berita</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                querySnapshot.forEach(doc => {
+                    const post = doc.data();
+                    const date = post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+                    
+                    html += `
+                        <div class="item-card">
+                            <div class="item-info">
+                                <div class="item-title">${post.title}</div>
+                                <div class="item-subtitle">${post.detail.substring(0, 80)}${post.detail.length > 80 ? '...' : ''}</div>
+                                <div class="item-meta">
+                                    <span><span class="material-symbols-outlined">calendar_month</span> ${date}</span>
+                                    ${post.link ? '<span><span class="material-symbols-outlined">link</span> Ada Link</span>' : ''}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn btn-small" onclick="editInfoPost('${doc.id}')">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button class="btn btn-small btn-danger" onclick="deleteInfoPost('${doc.id}')">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                infoList.innerHTML = html;
+                
+                if (document.getElementById('infoPanel').classList.contains('active')) {
+                    showAlert('🔄 Daftar berita telah diperbarui!', 'success');
+                }
+            }, (error) => {
+                console.error('Error listening to info posts:', error);
+                document.getElementById('infoList').innerHTML = '<div style="text-align: center; padding: 40px; color: #ff4757;">Gagal memuat berita</div>';
+            });
+        }
+
+        window.saveInfoPost = async function() {
+            const postData = {
+                title: document.getElementById('infoTitle').value,
+                detail: document.getElementById('infoDetail').value,
+                image: document.getElementById('infoImage').value || '',
+                link: document.getElementById('infoLink').value || '',
+                updatedAt: new Date()
+            };
+
+            if (!postData.title || !postData.detail) {
+                showAlert('❌ Judul dan isi berita harus diisi!', 'error');
+                return;
+            }
+
+            const postId = document.getElementById('infoId').value;
+
+            try {
+                if (postId) {
+                    postData.createdAt = new Date();
+                    const postRef = doc(db, 'infoPosts', postId);
+                    await updateDoc(postRef, postData);
+                    showAlert('✅ Berita berhasil diupdate!');
+                } else {
+                    postData.createdAt = new Date();
+                    const infoRef = collection(db, 'infoPosts');
+                    await addDoc(infoRef, postData);
+                    showAlert('✅ Berita berhasil dipublikasi!');
+                }
+                
+                resetInfoForm();
+            } catch (error) {
+                console.error('Error saving post:', error);
+                showAlert('❌ Gagal menyimpan berita!', 'error');
+            }
+        };
+
+        window.editInfoPost = async function(id) {
+            try {
+                const postRef = doc(db, 'infoPosts', id);
+                const postDoc = await getDoc(postRef);
+                
+                if (postDoc.exists()) {
+                    const post = postDoc.data();
+                    document.getElementById('infoId').value = id;
+                    document.getElementById('infoTitle').value = post.title || '';
+                    document.getElementById('infoDetail').value = post.detail || '';
+                    document.getElementById('infoImage').value = post.image || '';
+                    document.getElementById('infoLink').value = post.link || '';
+                    
+                    document.querySelectorAll('.tab-btn')[2].click();
+                }
+            } catch (error) {
+                console.error('Error editing post:', error);
+            }
+        };
+
+        window.deleteInfoPost = async function(id) {
+            if (confirm('Yakin ingin menghapus berita ini?')) {
+                try {
+                    const postRef = doc(db, 'infoPosts', id);
+                    await deleteDoc(postRef);
+                    showAlert('✅ Berita berhasil dihapus!');
+                } catch (error) {
+                    console.error('Error deleting post:', error);
+                    showAlert('❌ Gagal menghapus berita!', 'error');
+                }
+            }
+        };
+
+        window.resetInfoForm = function() {
+            document.getElementById('infoId').value = '';
+            document.getElementById('infoTitle').value = '';
+            document.getElementById('infoDetail').value = '';
+            document.getElementById('infoImage').value = '';
+            document.getElementById('infoLink').value = '';
+        };
+
+        // Start listening to all collections
+        listenToProfile();
+        listenToLinks();
+        listenToInfoPosts();
+
+        // Add mouse move effect for stat cards
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                card.style.setProperty('--x', `${x}%`);
+                card.style.setProperty('--y', `${y}%`);
+            });
+        });
+
+        // Cleanup listeners when page unloads
+        window.addEventListener('beforeunload', () => {
+            if (unsubscribeLinks) unsubscribeLinks();
+            if (unsubscribeInfo) unsubscribeInfo();
+            if (unsubscribeProfile) unsubscribeProfile();
+        });
+    </script>
+</body>
+</html>
